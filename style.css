@@ -1,0 +1,236 @@
+
+/* =========================
+   Base
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --background: #f5f5f7;
+  --surface: #ffffff;
+  --text: #25252a;
+  --subtext: #777780;
+  --border: #e5e5e9;
+  --accent: #5555cc;
+  --radius: 14px;
+}
+
+body {
+  margin: 0;
+  padding: 36px 24px 60px;
+  background: var(--background);
+  color: var(--text);
+  font-family: Arial, "Noto Sans JP", sans-serif;
+}
+
+/* =========================
+   Header
+========================= */
+
+header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+header h1 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin: 0 0 10px;
+}
+
+header p {
+  color: var(--subtext);
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* =========================
+   Main Layout
+========================= */
+
+main {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+section {
+  background: var(--surface);
+  padding: 26px;
+  margin-bottom: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.025);
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 22px;
+}
+
+/* =========================
+   Image Upload
+========================= */
+
+input[type="file"] {
+  max-width: 100%;
+  font-size: 13px;
+}
+
+#imageArea {
+  margin-top: 18px;
+  min-height: 220px;
+  border: 2px dashed #d5d5dc;
+  border-radius: 10px;
+  background: #fafafd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--subtext);
+}
+
+#imageArea p {
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+#imageCanvas {
+  display: none;
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  cursor: crosshair;
+}
+
+/* =========================
+   Base Color
+========================= */
+
+.base-color {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+#baseColor {
+  width: 64px;
+  height: 48px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+#hexValue {
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* =========================
+   Color Palette
+========================= */
+
+#palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+  gap: 9px;
+}
+
+/* JavaScriptで作成する色見本 */
+#palette button {
+  width: 100%;
+  min-width: 0;
+  min-height: 72px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#palette button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.15);
+}
+
+#palette button:active {
+  transform: scale(0.97);
+}
+
+/* =========================
+   Grayscale Comparison
+========================= */
+
+#grayscale {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#grayscale > div {
+  width: 100%;
+  min-height: 65px;
+  border-radius: 8px;
+}
+
+/* =========================
+   Responsive: Tablet
+========================= */
+
+@media (max-width: 700px) {
+  body {
+    padding: 26px 16px 40px;
+  }
+
+  header {
+    margin-bottom: 26px;
+  }
+
+  header h1 {
+    font-size: 29px;
+  }
+
+  section {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  #palette {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 7px;
+  }
+
+  #palette button {
+    min-height: 65px;
+    font-size: 10px;
+  }
+
+  #imageArea {
+    min-height: 180px;
+  }
+}
+
+/* =========================
+   Responsive: Small Screen
+========================= */
+
+@media (max-width: 400px) {
+  body {
+    padding: 20px 12px 32px;
+  }
+
+  section {
+    padding: 16px;
+  }
+
+  #palette {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

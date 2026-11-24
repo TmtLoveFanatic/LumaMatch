@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LumaMatch</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>LumaMatch</h1>
+    <p>モノクロにしたとき、同じ明るさになる色を見つける</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>1. 基準色を選ぶ</h2>
+      <input type="file" id="imageInput" accept="image/*">
+
+      <div id="imageArea">
+        <p>画像をここに読み込んでください</p>
+        <canvas id="imageCanvas"></canvas>
+      </div>
+
+      <div class="base-color">
+        <input type="color" id="baseColor" value="#B64B58">
+        <span id="hexValue">#B64B58</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 同じ輝度の色</h2>
+      <div id="palette"></div>
+    </section>
+
+    <section>
+      <h2>3. モノクロで比較</h2>
+      <div id="grayscale"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
