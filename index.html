@@ -9,17 +9,22 @@
 </head>
 <body>
   <header>
+    <div class="language-switch">
+      <button id="jaButton" class="active">日本語</button>
+      <button id="enButton">English</button>
+    </div>
+
     <h1>LumaMatch</h1>
-    <p>モノクロにしたとき、同じ明るさになる色を見つける</p>
+    <p id="subtitle">モノクロにしたとき、同じ明るさになる色を見つける</p>
   </header>
 
   <main>
     <section>
-      <h2>1. 基準色を選ぶ</h2>
+      <h2 id="heading1">1. 基準色を選ぶ</h2>
       <input type="file" id="imageInput" accept="image/*">
 
       <div id="imageArea">
-        <p>画像をここに読み込んでください</p>
+        <p id="imageMessage">画像をここに読み込んでください</p>
         <canvas id="imageCanvas"></canvas>
       </div>
 
@@ -30,12 +35,12 @@
     </section>
 
     <section>
-      <h2>2. 同じ輝度の色</h2>
+      <h2 id="heading2">2. 同じ輝度の色</h2>
       <div id="palette"></div>
     </section>
 
     <section>
-      <h2>3. モノクロで比較</h2>
+      <h2 id="heading3">3. モノクロで比較</h2>
       <div id="grayscale"></div>
     </section>
   </main>

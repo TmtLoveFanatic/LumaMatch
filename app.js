@@ -8,6 +8,63 @@ const hexValue = document.getElementById("hexValue");
 const palette = document.getElementById("palette");
 const grayscale = document.getElementById("grayscale");
 
+const jaButton = document.getElementById("jaButton");
+const enButton = document.getElementById("enButton");
+
+let currentLanguage = localStorage.getItem("lumamatch-language") || "ja";
+
+const translations = {
+  ja: {
+    subtitle: "モノクロにしたとき、同じ明るさになる色を見つける",
+    heading1: "1. 基準色を選ぶ",
+    heading2: "2. 同じ輝度の色",
+    heading3: "3. モノクロで比較",
+    imageMessage: "画像をここに読み込んでください",
+    grayTitle: "グレー値",
+    hue: "色相",
+    saturation: "彩度"
+  },
+  en: {
+    subtitle: "Find colors that have the same brightness in grayscale",
+    heading1: "1. Choose a Base Color",
+    heading2: "2. Colors with Matching Brightness",
+    heading3: "3. Grayscale Comparison",
+    imageMessage: "Load an image here",
+    grayTitle: "Grayscale value",
+    hue: "Hue",
+    saturation: "Saturation"
+  }
+};
+
+// 言語を切り替える
+function setLanguage(language) {
+  currentLanguage = language;
+  localStorage.setItem("lumamatch-language", language);
+
+  const t = translations[language];
+
+  document.documentElement.lang = language;
+  document.title = "LumaMatch";
+
+  document.getElementById("subtitle").textContent = t.subtitle;
+  document.getElementById("heading1").textContent = t.heading1;
+  document.getElementById("heading2").textContent = t.heading2;
+  document.getElementById("heading3").textContent = t.heading3;
+
+  const imageMessage = document.getElementById("imageMessage");
+  if (!canvas.width || !canvas.height) {
+    imageMessage.textContent = t.imageMessage;
+  }
+
+  jaButton.classList.toggle("active", language === "ja");
+  enButton.classList.toggle("active", language === "en");
+
+  updatePalette();
+}
+
+jaButton.addEventListener("click", () => setLanguage("ja"));
+enButton.addEventListener("click", () => setLanguage("en"));
+
 // HEXをRGBに変換
 function hexToRgb(hex) {
   return {
@@ -76,7 +133,7 @@ function luminanceToGray(value) {
   return Math.round(encoded * 255);
 }
 
-// 指定した色相・彩度で同じ輝度になる明るさを探す
+// 同じ輝度になる明るさを探す
 function findMatchingColor(hue, saturation, target) {
   let low = 0;
   let high = 100;
@@ -92,19 +149,18 @@ function findMatchingColor(hue, saturation, target) {
     }
   }
 
-  const rgb = hslToRgb(
+  return hslToRgb(
     hue,
     saturation,
     (low + high) / 2
   );
-
-  return rgb;
 }
 
 // パレットを作る
 function updatePalette() {
   const base = hexToRgb(baseColor.value);
   const target = luminance(base);
+  const t = translations[currentLanguage];
 
   hexValue.textContent = baseColor.value.toUpperCase();
 
@@ -120,14 +176,13 @@ function updatePalette() {
   grayBox.style.backgroundColor =
     `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
   grayBox.style.borderRadius = "8px";
-  grayBox.title = `グレー値: ${grayValue}`;
+  grayBox.title = `${t.grayTitle}: ${grayValue}`;
 
   grayscale.appendChild(grayBox);
 
-  // 重複する色を防ぐ
   const usedColors = new Set();
 
-  // 色相を5度ずつ、彩度を10%ずつ調べる
+  // 色相5度ごと、彩度10%ごとに調べる
   for (let hue = 0; hue < 360; hue += 5) {
     for (let saturation = 10; saturation <= 100; saturation += 10) {
       const color = findMatchingColor(
@@ -144,7 +199,6 @@ function updatePalette() {
 
       if (usedColors.has(hex)) continue;
 
-      // 輝度が基準色と十分近いか確認
       const difference = Math.abs(
         luminance(color) - target
       );
@@ -153,7 +207,6 @@ function updatePalette() {
 
       usedColors.add(hex);
 
-      // 色見本
       const swatch = document.createElement("button");
 
       swatch.style.backgroundColor = hex;
@@ -167,9 +220,11 @@ function updatePalette() {
       swatch.style.fontSize = "10px";
       swatch.style.overflow = "hidden";
       swatch.textContent = hex;
-      swatch.title = `${hex} / 色相 ${hue}° / 彩度 ${saturation}%`;
 
-      // クリックすると基準色に設定
+      swatch.title =
+        `${hex} / ${t.hue} ${hue}° / ${t.saturation} ${saturation}%`;
+
+      // クリックで基準色に設定
       swatch.addEventListener("click", () => {
         baseColor.value = hex;
         updatePalette();
@@ -214,7 +269,7 @@ imageInput.addEventListener("change", event => {
     );
 
     canvas.style.display = "block";
-    document.querySelector("#imageArea p").style.display = "none";
+    document.getElementById("imageMessage").style.display = "none";
 
     URL.revokeObjectURL(image.src);
   };
@@ -248,4 +303,4 @@ canvas.addEventListener("click", event => {
 });
 
 // 最初の表示
-updatePalette();
+setLanguage(currentLanguage);
