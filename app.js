@@ -19,24 +19,31 @@ const translations = {
     heading1: "1. 基準色を選ぶ",
     heading2: "2. 同じ輝度の色",
     heading3: "3. モノクロで比較",
+    uploadButton: "画像を選択",
+    noFile: "ファイルが選択されていません",
     imageMessage: "画像をここに読み込んでください",
     grayTitle: "グレー値",
+    grayDescription: "基準色をグレースケールに変換した表示です。",
     hue: "色相",
     saturation: "彩度"
   },
+
   en: {
     subtitle: "Find colors that have the same brightness in grayscale",
     heading1: "1. Choose a Base Color",
     heading2: "2. Colors with Matching Brightness",
     heading3: "3. Grayscale Comparison",
+    uploadButton: "Choose Image",
+    noFile: "No file selected",
     imageMessage: "Load an image here",
     grayTitle: "Grayscale value",
+    grayDescription: "Grayscale representation of the base color.",
     hue: "Hue",
     saturation: "Saturation"
   }
 };
 
-// 言語を切り替える
+// 言語切り替え
 function setLanguage(language) {
   currentLanguage = language;
   localStorage.setItem("lumamatch-language", language);
@@ -44,16 +51,21 @@ function setLanguage(language) {
   const t = translations[language];
 
   document.documentElement.lang = language;
-  document.title = "LumaMatch";
 
   document.getElementById("subtitle").textContent = t.subtitle;
   document.getElementById("heading1").textContent = t.heading1;
   document.getElementById("heading2").textContent = t.heading2;
   document.getElementById("heading3").textContent = t.heading3;
 
-  const imageMessage = document.getElementById("imageMessage");
+  document.getElementById("uploadButton").textContent = t.uploadButton;
+  document.getElementById("grayDescription").textContent = t.grayDescription;
+
+  if (!imageInput.files.length) {
+    document.getElementById("fileName").textContent = t.noFile;
+  }
+
   if (!canvas.width || !canvas.height) {
-    imageMessage.textContent = t.imageMessage;
+    document.getElementById("imageMessage").textContent = t.imageMessage;
   }
 
   jaButton.classList.toggle("active", language === "ja");
@@ -107,7 +119,7 @@ function hslToRgb(h, s, l) {
   };
 }
 
-// sRGBの相対輝度を計算
+// sRGBの相対輝度
 function luminance(rgb) {
   function linearize(value) {
     value /= 255;
@@ -124,7 +136,7 @@ function luminance(rgb) {
   );
 }
 
-// 相対輝度をグレースケール用のRGB値に変換
+// 相対輝度をグレースケール値に変換
 function luminanceToGray(value) {
   const encoded = value <= 0.0031308
     ? value * 12.92
@@ -169,7 +181,7 @@ function updatePalette() {
 
   const grayValue = luminanceToGray(target);
 
-  // 基準色のモノクロ表示
+  // モノクロ表示
   const grayBox = document.createElement("div");
   grayBox.style.width = "100%";
   grayBox.style.height = "65px";
@@ -182,14 +194,10 @@ function updatePalette() {
 
   const usedColors = new Set();
 
-  // 色相5度ごと、彩度10%ごとに調べる
+  // 色相5度ごと、彩度10%ごと
   for (let hue = 0; hue < 360; hue += 5) {
     for (let saturation = 10; saturation <= 100; saturation += 10) {
-      const color = findMatchingColor(
-        hue,
-        saturation,
-        target
-      );
+      const color = findMatchingColor(hue, saturation, target);
 
       const hex = rgbToHex(
         color.r,
@@ -224,13 +232,11 @@ function updatePalette() {
       swatch.title =
         `${hex} / ${t.hue} ${hue}° / ${t.saturation} ${saturation}%`;
 
-      // クリックで基準色に設定
       swatch.addEventListener("click", () => {
         baseColor.value = hex;
         updatePalette();
       });
 
-      // 右クリックでカラーコードをコピー
       swatch.addEventListener("contextmenu", event => {
         event.preventDefault();
         navigator.clipboard.writeText(hex);
@@ -241,13 +247,15 @@ function updatePalette() {
   }
 }
 
-// 基準色を変更したとき
+// 基準色の変更
 baseColor.addEventListener("input", updatePalette);
 
-// 画像を読み込む
+// 画像ファイルの選択
 imageInput.addEventListener("change", event => {
   const file = event.target.files[0];
   if (!file) return;
+
+  document.getElementById("fileName").textContent = file.name;
 
   const image = new Image();
 
@@ -272,6 +280,15 @@ imageInput.addEventListener("change", event => {
     document.getElementById("imageMessage").style.display = "none";
 
     URL.revokeObjectURL(image.src);
+  };
+
+  image.onerror = () => {
+    URL.revokeObjectURL(image.src);
+    alert(
+      currentLanguage === "ja"
+        ? "画像を読み込めませんでした。"
+        : "Could not load the image."
+    );
   };
 
   image.src = URL.createObjectURL(file);

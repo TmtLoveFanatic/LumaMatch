@@ -1,8 +1,4 @@
 
-/* =========================
-   LumaMatch - Main Styles
-   ========================= */
-
 :root {
   --background: #f7f7f7;
   --surface: #ffffff;
@@ -31,14 +27,11 @@ body {
   line-height: 1.6;
 }
 
-/* =========================
-   Header
-   ========================= */
+/* Header */
 
 header {
-  position: relative;
   text-align: center;
-  padding: 48px 20px 36px;
+  padding: 32px 20px 36px;
 }
 
 header h1 {
@@ -85,9 +78,7 @@ header p {
   border-color: var(--accent);
 }
 
-/* =========================
-   Main Layout
-   ========================= */
+/* Main Layout */
 
 main {
   width: min(100% - 32px, 1000px);
@@ -109,20 +100,38 @@ section h2 {
   font-weight: 600;
 }
 
-/* =========================
-   File Input
-   ========================= */
+/* File Input */
 
-input[type="file"] {
-  display: block;
-  max-width: 100%;
+.file-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 16px;
-  font-size: 14px;
 }
 
-/* =========================
-   Image Area
-   ========================= */
+.upload-button {
+  display: inline-block;
+  padding: 9px 16px;
+  background: #333333;
+  color: white;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.upload-button:hover {
+  background: #555555;
+}
+
+#fileName {
+  color: var(--muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+/* Image Area */
 
 #imageArea {
   display: flex;
@@ -151,9 +160,7 @@ input[type="file"] {
   cursor: crosshair;
 }
 
-/* =========================
-   Base Color
-   ========================= */
+/* Base Color */
 
 .base-color {
   display: flex;
@@ -179,9 +186,7 @@ input[type="file"] {
   letter-spacing: 0.5px;
 }
 
-/* =========================
-   Color Palette
-   ========================= */
+/* Color Palette */
 
 #palette {
   display: grid;
@@ -204,21 +209,23 @@ input[type="file"] {
   transform: scale(0.96);
 }
 
-/* =========================
-   Grayscale Comparison
-   ========================= */
+/* Grayscale */
 
 #grayscale {
   width: 100%;
 }
 
-/* =========================
-   Responsive Design
-   ========================= */
+#grayDescription {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Responsive */
 
 @media (max-width: 700px) {
   header {
-    padding: 32px 16px 28px;
+    padding: 28px 16px;
   }
 
   header h1 {
